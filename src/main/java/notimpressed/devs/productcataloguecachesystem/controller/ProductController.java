@@ -1,5 +1,6 @@
 package notimpressed.devs.productcataloguecachesystem.controller;
 
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import notimpressed.devs.productcataloguecachesystem.model.Product;
@@ -15,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/products")
 @RequiredArgsConstructor
+@RateLimiter(name = "productApiLimiter")
 public class ProductController {
 
     private final ProductService productService;

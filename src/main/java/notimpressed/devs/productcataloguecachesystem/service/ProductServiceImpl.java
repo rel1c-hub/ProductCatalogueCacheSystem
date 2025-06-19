@@ -7,6 +7,7 @@ import notimpressed.devs.productcataloguecachesystem.repository.ProductRepositor
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
+    private final ApplicationContext applicationContext;
     private final ProductRepository productRepository;
 
     @Override
@@ -48,7 +50,7 @@ public class ProductServiceImpl implements ProductService {
     })
     @Override
     public Product updateProduct(Long id, Product updatedProduct) {
-        Product existing = getProductById(id);
+        Product existing = applicationContext.getBean(ProductService.class).getProductById(id);
         existing.setName(updatedProduct.getName());
         existing.setDescription(updatedProduct.getDescription());
         existing.setPrice(updatedProduct.getPrice());
