@@ -1,7 +1,7 @@
 package notimpressed.devs.productcataloguecachesystem.service;
 
 import lombok.RequiredArgsConstructor;
-import notimpressed.devs.productcataloguecachesystem.ProductNotFoundException;
+import notimpressed.devs.productcataloguecachesystem.exception.ProductNotFoundException;
 import notimpressed.devs.productcataloguecachesystem.model.Product;
 import notimpressed.devs.productcataloguecachesystem.repository.ProductRepository;
 import org.springframework.cache.annotation.CacheEvict;
