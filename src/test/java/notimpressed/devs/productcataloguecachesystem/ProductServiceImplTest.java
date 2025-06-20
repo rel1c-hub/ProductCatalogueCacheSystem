@@ -1,16 +1,20 @@
 package notimpressed.devs.productcataloguecachesystem;
 
+import notimpressed.devs.productcataloguecachesystem.dto.ProductRequestDto;
+import notimpressed.devs.productcataloguecachesystem.dto.ProductResponseDto;
 import notimpressed.devs.productcataloguecachesystem.exception.ProductNotFoundException;
 import notimpressed.devs.productcataloguecachesystem.model.Product;
 import notimpressed.devs.productcataloguecachesystem.repository.ProductRepository;
-import notimpressed.devs.productcataloguecachesystem.service.ProductService;
 import notimpressed.devs.productcataloguecachesystem.service.ProductServiceImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.springframework.context.ApplicationContext;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -50,14 +54,14 @@ class ProductServiceImplTest {
     }
 
     @Test
-    void getProductById_existingProduct_returnsProduct() {
+    void getProductById_existingProduct_returnsProductDto() {
         when(productRepository.findById(1L)).thenReturn(Optional.of(product));
 
-        Product found = productService.getProductById(1L);
+        ProductResponseDto foundDto = productService.getProductById(1L);
 
-        assertNotNull(found);
-        assertEquals(1L, found.getId());
-        assertEquals("Test Product", found.getName());
+        assertNotNull(foundDto);
+        assertEquals(1L, foundDto.id());
+        assertEquals("Test Product", foundDto.name());
 
         verify(productRepository, times(1)).findById(1L);
     }
@@ -77,38 +81,52 @@ class ProductServiceImplTest {
 
     @Test
     void getProductsByCategory_existingCategory_returnsProducts() {
-        List<Product> mockProducts = List.of(product);
-        when(productRepository.findByCategory("TestCategory")).thenReturn(mockProducts);
+        Pageable pageable = PageRequest.of(0, 10);
+        ProductResponseDto dto = new ProductResponseDto(
+                1L,
+                "Test Product",
+                "Test Description",
+                BigDecimal.TEN,
+                "TestCategory",
+                10
+        );
 
-        List<Product> result = productService.getProductsByCategory("TestCategory");
+        Page<ProductResponseDto> dtoPage = new PageImpl<>(List.of(dto), pageable, 1);
 
-        assertEquals(1, result.size());
-        assertEquals("Test Product", result.get(0).getName());
+        when(productService.getProductsByCategory("TestCategory", pageable))
+                .thenReturn(dtoPage);
 
-        verify(productRepository, times(1)).findByCategory("TestCategory");
+        Page<ProductResponseDto> result = productService.getProductsByCategory("TestCategory", pageable);
+
+        assertEquals(1, result.getTotalElements());
+        assertEquals("Test Product", result.getContent().get(0).name());
+
+        verify(productRepository, times(1)).findByCategory("TestCategory", pageable);
     }
 
     @Test
     void updateProduct_existingProduct_updatesAndSaves() {
-        Product updated = new Product();
-        updated.setName("Updated Product");
-        updated.setPrice(new BigDecimal("20.0"));
-        updated.setCategory("UpdatedCategory");
-        updated.setStock(10);
+        ProductRequestDto updatedDto = new ProductRequestDto(
+                "Updated Product",
+                "Updated description",
+                new BigDecimal("20.0"),
+                "UpdatedCategory",
+                10
+        );
 
-        when(applicationContext.getBean(ProductService.class)).thenReturn(productService);
         when(productRepository.findById(1L)).thenReturn(Optional.of(product));
         when(productRepository.save(any(Product.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        Product result = productService.updateProduct(1L, updated);
+        ProductResponseDto result = productService.updateProduct(1L, updatedDto);
 
-        assertEquals("Updated Product", result.getName());
-        assertEquals("UpdatedCategory", result.getCategory());
-        assertEquals(new BigDecimal("20.0"), result.getPrice());
-        assertEquals(10, result.getStock());
+        assertEquals("Updated Product", result.name());
+        assertEquals("UpdatedCategory", result.category());
+        assertEquals(new BigDecimal("20.0"), result.price());
+        assertEquals(10, result.stock());
 
         verify(productRepository).save(any(Product.class));
     }
+
 
     @Test
     void deleteProduct_existingProduct_deletesSuccessfully() {
@@ -137,19 +155,21 @@ class ProductServiceImplTest {
 
     @Test
     void createProduct_savesAndReturnsProduct() {
-        Product newProduct = new Product();
-        newProduct.setName("New Product");
-        newProduct.setPrice(new BigDecimal("30.0"));
-        newProduct.setCategory("NewCategory");
-        newProduct.setStock(15);
+        ProductRequestDto newDto = new ProductRequestDto(
+                "New Product",
+                "Some description",
+                new BigDecimal("30.0"),
+                "NewCategory",
+                15
+        );
 
-        when(productRepository.save(newProduct)).thenReturn(newProduct);
+        when(productRepository.save(any(Product.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        Product result = productService.createProduct(newProduct);
+        ProductResponseDto result = productService.createProduct(newDto);
 
         assertNotNull(result);
-        assertEquals("New Product", result.getName());
+        assertEquals("New Product", result.name());
 
-        verify(productRepository, times(1)).save(newProduct);
+        verify(productRepository, times(1)).save(any(Product.class));
     }
 }
