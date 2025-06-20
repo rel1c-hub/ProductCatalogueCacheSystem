@@ -1,6 +1,7 @@
 package notimpressed.devs.productcataloguecachesystem;
 
 
+import notimpressed.devs.productcataloguecachesystem.dto.ProductRequestDto;
 import notimpressed.devs.productcataloguecachesystem.model.Product;
 import notimpressed.devs.productcataloguecachesystem.repository.ProductRepository;
 import notimpressed.devs.productcataloguecachesystem.service.ProductService;
@@ -11,9 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
-
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Optional;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
@@ -54,13 +53,17 @@ class ProductServiceCacheTest {
 
         productService.getProductById(1L);
 
-        Product updated = new Product();
-        updated.setName("Updated Name");
-        updated.setPrice(BigDecimal.TEN);
-        updated.setCategory("Updated Category");
-        updated.setStock(5);
-        productService.updateProduct(1L, updated);
+        ProductRequestDto updatedDto = new ProductRequestDto(
+                "Updated Name",
+                "Some description",
+                BigDecimal.TEN,
+                "Updated Category",
+                5
+        );
+
+        productService.updateProduct(1L, updatedDto);
+
         productService.getProductById(1L);
-        verify(productRepository, times(2)).findById(1L);
+        verify(productRepository, times(3)).findById(1L);
     }
 }

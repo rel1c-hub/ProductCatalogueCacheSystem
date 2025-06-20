@@ -1,16 +1,16 @@
 package notimpressed.devs.productcataloguecachesystem.service;
 
+import notimpressed.devs.productcataloguecachesystem.dto.ProductRequestDto;
+import notimpressed.devs.productcataloguecachesystem.dto.ProductResponseDto;
 import notimpressed.devs.productcataloguecachesystem.model.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
-
 public interface ProductService {
-    Page<Product> getAllProducts(Pageable pageable);
-    Product getProductById(Long id);
-    List<Product> getProductsByCategory(String category);
-    Product createProduct(Product product);
-    Product updateProduct(Long id, Product updatedProduct);
+    Page<ProductResponseDto> getAllProducts(Pageable pageable);
+    ProductResponseDto getProductById(Long id);
+    Page<ProductResponseDto> getProductsByCategory(String category, Pageable pageable);
+    ProductResponseDto createProduct(ProductRequestDto productRequestDto);
+    ProductResponseDto updateProduct(Long id, ProductRequestDto productRequestDto);
     void deleteProduct(Long id);
 }
