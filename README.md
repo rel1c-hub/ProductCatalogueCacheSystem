@@ -119,19 +119,6 @@ Swagger UI (API документація і тестування):
 - Оберіть файл postman_collection.json
 - Використовуйте запити у колекції для тестування API
 
-graph LR
-Client[Client (Postman / Browser)]
-API[Spring Boot REST API]
-DB[H2 In-memory Database]
-Cache[Caffeine Cache]
-Docker[Docker Compose]
-Grafana[Grafana]
-Prometheus[Prometheus]
-Loki[Loki]
-Tempo[Tempo]
-Alloy[Alloy]
-Swagger[Swagger UI]
-
 ## 🧭 Architecture Diagram
 
 ![Architecture Diagram](docs/mermaid_graph.svg)
