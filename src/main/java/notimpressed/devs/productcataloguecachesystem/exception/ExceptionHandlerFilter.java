@@ -11,6 +11,7 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 @Component
 @RequiredArgsConstructor
 public class ExceptionHandlerFilter extends OncePerRequestFilter {
+
     private final HandlerExceptionResolver handlerExceptionResolver;
 
     @Override
