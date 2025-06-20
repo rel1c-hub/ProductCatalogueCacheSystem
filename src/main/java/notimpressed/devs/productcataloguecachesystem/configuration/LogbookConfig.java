@@ -14,15 +14,16 @@ public class LogbookConfig {
 
     @Bean
     public Logbook logbook() {
-        Predicate<HttpRequest> isSwagger = request -> {
+        Predicate<HttpRequest> ignoreList = request -> {
             String path = request.getPath();
             return path.startsWith("/swagger-ui")
                     || path.startsWith("/v3/api-docs")
-                    || path.startsWith("/v3/swagger-config");
+                    || path.startsWith("/v3/swagger-config")
+                    || path.startsWith("/actuator/prometheus");
         };
 
         return Logbook.builder()
-                .condition(isSwagger.negate())
+                .condition(ignoreList.negate())
                 .sink(new DefaultSink(
                         new CurlHttpLogFormatter(),
                         new DefaultHttpLogWriter()
