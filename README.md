@@ -17,7 +17,7 @@
 - H2 in-memory database with sample data
 - Basic validation and exception handling
 - Swagger/OpenAPI documentation
-- API Rate Limiting на основі Resilience4j (20 запитів на хвилину на користувача)
+- API Rate Limiting на основі Resilience4j (10 запитів на хвилину на користувача)
 
 ---
 
