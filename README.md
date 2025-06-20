@@ -132,32 +132,6 @@ Tempo[Tempo]
 Alloy[Alloy]
 Swagger[Swagger UI]
 
-graph TD
-Client[👤 Client] -->|HTTP Requests| API[🚀 API Service]
+## 🧭 Architecture Diagram
 
-    API --> DB[(🗄️ Database)]
-    API --> Cache[(⚡ Cache)]
-    API --> Swagger[📚 Swagger UI]
-    
-    subgraph "🐳 Docker Infrastructure"
-        Grafana[📊 Grafana]
-        Prometheus[📈 Prometheus]
-        Loki[📝 Loki]
-        Tempo[🔍 Tempo]
-        Alloy[🔧 Alloy]
-    end
-    
-    API -.->|Logs| Loki
-    API -.->|Metrics| Prometheus
-    API -.->|Tracing| Tempo
-    
-    Prometheus -->|Data Source| Grafana
-    Loki -->|Data Source| Grafana
-    Tempo -->|Data Source| Grafana
-    Alloy -->|Config & Data| Grafana
-    
-    style API fill:#e1f5fe
-    style Grafana fill:#f3e5f5
-    style Client fill:#e8f5e8
-    style DB fill:#fff3e0
-    style Cache fill:#fce4ec
+![Architecture Diagram](docs/mermaid_graph.svg)
