@@ -9,11 +9,10 @@
 
 
 - Full CRUD support for products
-- Caching:
-- ✅ Single product retrieval
-- ✅ Category-based product lists
-- ✅ Cache eviction on update/delete
-- ✅ Cache entries expire after 10 minutes
+- Caching:  ✅ Single product retrieval
+✅ Category-based product lists
+✅ Cache eviction on update/delete
+✅ Cache entries expire after 10 minutes
 - H2 in-memory database with sample data
 - Basic validation and exception handling
 - Swagger/OpenAPI documentation
